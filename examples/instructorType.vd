@@ -1,0 +1,43 @@
+```
+var loader	= require('../lib/loader')
+	 , _ 		= require('lodash')
+
+var fcq = loader.json('./fcq/fcq.2014.json', {multiLines:true})
+
+//var regex = new RegEx('^/d',gi)
+var inst = _.pluck(fcq, 'insgrp1')
+			,unique_inst_type = _.unique(_.compact(inst))
+
+var hashInst = []
+	,hashGrds = []
+
+for(var i=0; i<fcq.length; i++){
+
+	if(hashInst[fcq[i].insgrp1] === undefined){
+		if(fcq[i].AVG_GRD != ''){
+			hashInst[fcq[i].insgrp1] = 1
+			hashGrds[fcq[i].insgrp1] = parseFloat(fcq[i].AVG_GRD)
+		}else{
+			hashInst[fcq[i].insgrp1] = 1
+			hashGrds[fcq[i].insgrp1] = 0
+		}
+	}else{
+		hashInst[fcq[i].insgrp1]++
+		if(fcq[i].AVG_GRD != ''){
+			hashGrds[fcq[i].insgrp1] += parseFloat(fcq[i].AVG_GRD)
+
+			//console.log(hashGrds[fcq[i].insgrp1])
+		}
+	}
+}
+
+for (var j=0; j<unique_inst_type.length; j++){
+	var avg = hashGrds[unique_inst_type[j]] / hashInst[unique_inst_type[j]]
+	console.log("Instructor type '" + unique_inst_type[j] + "' gave avereage grades of " + avg + "\n")
+}
+
+console.log(unique_inst_type)
+```
+## There is {{unique_inst_type.length}} types of instructor
+
+```
