@@ -1,0 +1,47 @@
+```
+var loader = require('../lib/loader')
+var _ = require('lodash')
+
+var fcq = loader.json('./fcq/fcq.2014.json', {multiLines: true})
+//var fields = _.keys(fcq[0]).join(', ')
+
+//console.log(fcq)
+//console.log(fields)
+console.log("There is %d of fcq", fcq.length)
+
+
+var dept = _.pluck(fcq, 'CrsPBADept')
+	,unique_dept = _.unique(_.compact(dept))
+
+var hashNum = []; //size of dept.length
+var hashGrd = [];
+
+for(var i=0; i<fcq.length; i++){
+	//var grades = fcq[i].AVG_GRD;
+	//console.log(grades)
+	if(hashNum[fcq[i].CrsPBADept] === undefined) {//this dept never shown yet
+		if(fcq[i].AVG_GRD != ''){ //only when it's not empty
+			hashNum[fcq[i].CrsPBADept] = 1
+			hashGrd[fcq[i].CrsPBADept] = parseFloat(fcq[i].AVG_GRD)
+		} else {
+			hashNum[fcq[i].CrsPBADept] = 1
+			hashGrd[fcq[i].CrsPBADept] = 0
+		}
+	} else {
+		hashNum[fcq[i].CrsPBADept]++
+		if(fcq[i].AVG_GRD != ''){ //only when it's not empty
+			hashGrd[fcq[i].CrsPBADept] += parseFloat(fcq[i].AVG_GRD)
+		}
+	}
+}
+
+for(var j=0; j<unique_dept.length; j++){
+	console.log(unique_dept[j] + " provided " + hashNum[unique_dept[j]] + " courses.")
+	console.log("Average grades on this dept is " 
+					+ hashGrd[unique_dept[j]]/hashNum[unique_dept[j]] + '\n')
+}
+```
+## FCQs per Department
+
+{{unique_dept}} provided {{hashNum[unique_dept]} courses
+```
