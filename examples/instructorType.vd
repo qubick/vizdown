@@ -4,9 +4,9 @@ var loader	= require('../lib/loader')
 
 var fcq = loader.json('./fcq/fcq.2014.json', {multiLines:true})
 
-//var regex = new RegEx('^/d',gi)
+
 var inst = _.pluck(fcq, 'insgrp1')
-			,unique_inst_type = _.unique(_.compact(inst))
+var unique_inst_type = _.unique(_.compact(inst))
 
 var hashInst = []
 	,hashGrds = []
@@ -33,11 +33,15 @@ for(var i=0; i<fcq.length; i++){
 
 for (var j=0; j<unique_inst_type.length; j++){
 	var avg = hashGrds[unique_inst_type[j]] / hashInst[unique_inst_type[j]]
-	console.log("Instructor type '" + unique_inst_type[j] + "' gave avereage grades of " + avg + "\n")
+	var type = unique_inst_type[j].match(/[a-zA-Z ]/gi).join("")
+	console.log("Instructor type '" + type + "' gave avereage grades of " + avg + "\n")
 }
 
 console.log(unique_inst_type)
 ```
-## There is {{unique_inst_type.length}} types of instructor
+## Instructor Type
+There is {{unique_inst_type.length}} types of instructor
+Per types of {{unique_inst_type}},
+distributions are {{hashInst['1 TTT']}}, {{hashInst['3 Supp']}}, {{hashInst['2 Other reg']}}, {{hashInst['4 TA Cred']}}
 
 ```
