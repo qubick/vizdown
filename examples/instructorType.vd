@@ -9,11 +9,13 @@ var inst = _.pluck(fcq, 'insgrp1')
 var unique_inst_type = _.unique(_.compact(inst))
 
 var hashInst = []
-	,hashGrds = []
+var hashGrds = []
+var hashStdt = []
 
 for(var i=0; i<fcq.length; i++){
 
 	if(hashInst[fcq[i].insgrp1] === undefined){
+		// issue #4 && #8
 		if(fcq[i].AVG_GRD != ''){
 			hashInst[fcq[i].insgrp1] = 1
 			hashGrds[fcq[i].insgrp1] = parseFloat(fcq[i].AVG_GRD)
@@ -33,11 +35,13 @@ for(var i=0; i<fcq.length; i++){
 
 for (var j=0; j<unique_inst_type.length; j++){
 	var avg = hashGrds[unique_inst_type[j]] / hashInst[unique_inst_type[j]]
+	avg = avg.toFixed(3)
 	var type = unique_inst_type[j].match(/[a-zA-Z ]/gi).join("")
-	console.log("Instructor type '" + type + "' gave avereage grades of " + avg + "\n")
+	console.log("Instructor type '" + type + "' gave avereage grades of " + avg)
 }
+//console.log(unique_inst_type)
 
-console.log(unique_inst_type)
+
 ```
 ## Instructor Type
 There is {{unique_inst_type.length}} types of instructor
@@ -45,3 +49,25 @@ Per types of {{unique_inst_type}},
 distributions are {{hashInst['1 TTT']}}, {{hashInst['3 Supp']}}, {{hashInst['2 Other reg']}}, {{hashInst['4 TA Cred']}}
 
 ```
+
+console.log("Enrollment total for each instructor group")
+//issue #10
+unique_inst_type.forEach(function(i){
+	hashStdt[i] = 0
+})
+
+fcq.forEach(function(f){
+	unique_inst_type.forEach(function(ins){
+		if(f.insgrp1 === ins)
+			hashStdt[ins] += parseFloat(f.N_ENROLL)
+	})
+})
+
+console.log(hashStdt)
+//convert hash to json object
+// '{' + key + value + '}'
+```
+## Enrollment totals for each instructor group
+
+```
+viz.list(hashStdt)
