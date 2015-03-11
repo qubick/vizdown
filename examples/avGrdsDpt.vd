@@ -3,25 +3,20 @@ var loader = require('../lib/loader')
 var _ = require('lodash')
 
 var fcq = loader.json('./fcq/fcq.2014.json', {multiLines: true})
-//var fields = _.keys(fcq[0]).join(', ')
 
-//console.log(fcq)
-//console.log(fields)
 console.log("There is %d of fcq", fcq.length)
 
 
 var dept = _.pluck(fcq, 'CrsPBADept')
-	,unique_dept = _.unique(_.compact(dept))
+var unique_dept = _.unique(_.compact(dept))
 
 var hashNum = []; //size of dept.length
 var hashGrd = [];
 
 for(var i=0; i<fcq.length; i++){
-	//var grades = fcq[i].AVG_GRD;
-	//console.log(grades)
 	if(hashNum[fcq[i].CrsPBADept] === undefined) {//this dept never shown yet
 		if(fcq[i].AVG_GRD != ''){ //only when it's not empty
-			hashNum[fcq[i].CrsPBADept] = 1
+			hashNum[fcq[i].CrsPBADept] = 1 //initialize hash as integer type
 			hashGrd[fcq[i].CrsPBADept] = parseFloat(fcq[i].AVG_GRD)
 		} else {
 			hashNum[fcq[i].CrsPBADept] = 1
@@ -43,5 +38,42 @@ for(var j=0; j<unique_dept.length; j++){
 ```
 ## FCQs per Department
 
-{{unique_dept}} provided {{hashNum[unique_dept]} courses
+List of course title given by department is specified
+{{unique_dept}} 
 ```
+var data = {}
+var grds = []
+
+unique_dept.forEach(function(d){
+	data = {
+		dept: d,
+		grades: (hashGrd[d]/hashNum[d]).toFixed(3)
+	}
+	grds.push(data)
+})
+//viz.list(grds)
+```
+Table
+```jade
+table(width=50)
+	tr
+		th Department Code
+		th Average grades given by this Dept
+	each d in grds
+		tr
+			td= d.dept
+			td= d.grades
+```
+## Max Min grades
+```
+var max = _.max(grds, function(g){
+	return parseFloat(g.grades)
+})
+var maxDpt = _.indexBy(grds, max)
+var min = _.min(grds, function(g){
+	return parseFloat(g.grades)
+})
+var minDpt = _.indexBy(grds, min)
+```
+Maximum average grade were {{max}} given by {{maxDpt}}
+Minimum average grade wer {{min}} given by {{minDpt}}
