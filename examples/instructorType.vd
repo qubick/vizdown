@@ -28,7 +28,6 @@ for(var i=0; i<fcq.length; i++){
 		if(fcq[i].AVG_GRD != ''){
 			hashGrds[fcq[i].insgrp1] += parseFloat(fcq[i].AVG_GRD)
 
-			//console.log(hashGrds[fcq[i].insgrp1])
 		}
 	}
 }
@@ -39,19 +38,42 @@ for (var j=0; j<unique_inst_type.length; j++){
 	var type = unique_inst_type[j].match(/[a-zA-Z ]/gi).join("")
 	console.log("Instructor type '" + type + "' gave avereage grades of " + avg)
 }
-//console.log(unique_inst_type)
 
 
 ```
 ## Instructor Type
 There is {{unique_inst_type.length}} types of instructor
-Per types of {{unique_inst_type}},
-distributions are {{hashInst['1 TTT']}}, {{hashInst['3 Supp']}}, {{hashInst['2 Other reg']}}, {{hashInst['4 TA Cred']}}
 
 ```
+var data = {}
+var dist = []
 
-console.log("Enrollment total for each instructor group")
-//issue #10
+unique_inst_type.forEach(function(d){
+	data = {
+		inst: d,
+		dist: hashInst[d]
+	}
+	dist.push(data)
+})
+viz.list(dist)
+```
+## Average grade given by Instructor types
+```
+var data = {}
+var grade = []
+
+unique_inst_type.forEach(function(d){
+	data = {
+		inst: d,
+		dist: (hashGrds[d]/hashInst[d]).toFixed(3)
+	}
+	grade.push(data)
+})
+
+viz.list(grade)
+```
+## Enrollment total for each instructor group
+```
 unique_inst_type.forEach(function(i){
 	hashStdt[i] = 0
 })
@@ -63,11 +85,14 @@ fcq.forEach(function(f){
 	})
 })
 
-console.log(hashStdt)
-//convert hash to json object
-// '{' + key + value + '}'
-```
-## Enrollment totals for each instructor group
 
-```
-viz.list(hashStdt)
+var stdt = []
+var data = {}
+unique_inst_type.forEach(function(d){
+	data = {
+		instType: d,
+		erlTotal: hashStdt[d]
+	}
+	stdt.push(data)
+})
+viz.list(stdt)
