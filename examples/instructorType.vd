@@ -57,6 +57,17 @@ unique_inst_type.forEach(function(d){
 })
 viz.list(dist)
 ```
+in Table
+```jade
+table
+	tr
+		th Instructor Type
+		th Numbers of instructors in this group
+	each d in dist
+		tr
+			td= d.inst
+			td= d.dist
+```
 ## Average grade given by Instructor types
 ```
 var data = {}
@@ -65,12 +76,23 @@ var grade = []
 unique_inst_type.forEach(function(d){
 	data = {
 		inst: d,
-		dist: (hashGrds[d]/hashInst[d]).toFixed(3)
+		avgGrades: (hashGrds[d]/hashInst[d]).toFixed(3)
 	}
 	grade.push(data)
 })
 
 viz.list(grade)
+```
+in Table
+```jade
+table
+	tr
+		th Instructor Type
+		th Average grades given by this group
+	each d in grade
+		tr
+			td= d.inst
+			td= d.avgGrades
 ```
 ## Enrollment total for each instructor group
 ```
@@ -96,3 +118,15 @@ unique_inst_type.forEach(function(d){
 	stdt.push(data)
 })
 viz.list(stdt)
+```
+in Table
+```jade
+table
+	tr
+		th Instructor Type
+		th Enrollment Total
+	each d in stdt
+		tr
+			td= d.instType
+			td= d.erlTotal
+```
