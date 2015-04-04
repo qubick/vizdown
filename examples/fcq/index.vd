@@ -1,7 +1,7 @@
 # FCQ Data Analysis for 2014
 
 ```
-var data = loader.json('examples/fcq/fcq.2014.json', {multiLines: true})
+var data = loader.json('fcq.2014.json', {multiLines: true})
 var fields = _.keys(data[0]).join(', ')
 ```
 

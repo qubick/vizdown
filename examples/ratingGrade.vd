@@ -1,31 +1,30 @@
 ```
 var loader = require('../lib/loader')
 var _ = require('lodash')
+var json = require('json-simple')
 
 var fcq = loader.json('fcq/fcq.2014.json', {multiLines: true})
-//var fields = _.keys(fcq[0]).join(', ')
 
 console.log("There is %d of fcq", fcq.length)
 
 
-var level = _.pluck(fcq, 'CrsLvlNum')
-var unique_level = _.unique(_.compact(level))
+var crsRating = _.pluck(fcq, 'AvgCourse')
+var unique_crs = _.unique(_.parseInt(_.compact((crsRating))))
+
 var sum = []
 var num = []
 var avr = []
 
-for(var i=0; i<unique_level.length; i++){
-	sum[unique_level[i]] = 0
-	num[unique_level[i]] = 0
+for(var i=0; i<unique_crs.lengtdh; i++){
+	sum[unique_crs[i]] = 0
+	num[unique_crs[i]] = 0
 }
 
 fcq.forEach(function(f){
-	unique_level.forEach(function(l){
-		if(f.CrsLvlNum === l){
-			num[l]++
-			if (parseFloat(f.AVG_GRD) <= 4){ //how to deal with NaN???
-				sum[l] += parseFloat(f.AVG_GRD)
-			}
+	unique_crs.forEach(function(c){
+		if(f.AvgCourse === c){
+			num[c]++
+			sum[c] += parseFloat(f.Workload_Hrs_Wk)
 		}
 	});	
 });
@@ -34,9 +33,5 @@ unique_level.forEach(function(l){
 	avr[l] = (sum[l]/num[l]).toFixed(3)	
 })
 
-console.log(avr)
 ```
 ## Correlation between course level & grades
-
-{{unique_level.join(", ")}} gave grades of
-{{avr['1XXX']}}, {{avr['2XXX']}}, {{avr['3XXX']}}, {{avr['4XXX']}}, {{avr['5XXX']}}, {{avr['7XXX']}}, {{avr['6XXX']}}, {{avr['8XXX']}}
